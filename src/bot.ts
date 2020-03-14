@@ -4,9 +4,12 @@ import {inject, injectable} from 'inversify';
 import {TYPES} from './types';
 import {Settings} from './models';
 import {sequelize} from './utils/db';
-import handleGuildCreate from './events/guild-create';
 import container from './inversify.config';
 import Command from './commands';
+
+// Event handlers
+import handleGuildCreate from './events/guild-create';
+import handleTypingStart from './events/typing-start';
 
 @injectable()
 export default class {
@@ -61,7 +64,7 @@ export default class {
       try {
         const handler = this.commands.get(command);
 
-        handler!.execute(msg, args);
+        await handler!.execute(msg, args);
       } catch (error) {
         console.error(error);
         msg.reply('there was an error trying to execute that command!');
@@ -80,6 +83,7 @@ export default class {
 
     // Register event handlers
     this.client.on('guildCreate', handleGuildCreate);
+    this.client.on('typingStart', handleTypingStart);
 
     return this.client.login(this.token);
   }
