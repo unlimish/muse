@@ -384,6 +384,7 @@ export default class {
         .noVideo()
         .audioCodec('libopus')
         .outputFormat('webm')
+	.audioFilters('volume=0.01')
         .on('error', error => {
           console.error(error);
           reject(error);
